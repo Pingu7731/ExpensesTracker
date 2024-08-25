@@ -1,8 +1,18 @@
+import 'package:expensestracker/database/expense_database.dart';
 import 'package:expensestracker/home.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized;
+
+  await ExpenseDb.initialize();
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => ExpenseDb(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
