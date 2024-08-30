@@ -50,6 +50,55 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  //open dialog when pressed edit button
+  void editExpense(Expense expense) {
+    String currentname = expense.name;
+    String currentamount = expense.amount.toString();
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text(
+          'Something Wrong ?',
+          textAlign: TextAlign.center,
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: namecontroller,
+              decoration: InputDecoration(hintText: currentname),
+            ),
+            TextField(
+              controller: amountcontroller,
+              decoration: InputDecoration(hintText: currentamount),
+            ),
+          ],
+        ),
+        actions: [
+          cancelBUtton(),
+          editButton(expense),
+        ],
+      ),
+    );
+  }
+
+  //delete box
+  void deleteExpense(Expense expense) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text(
+          'Delete ?',
+          textAlign: TextAlign.center,
+        ),
+        actions: [
+          cancelBUtton(),
+          deleteButton(expense.id),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<ExpenseDb>(
@@ -64,13 +113,15 @@ class _HomePageState extends State<HomePage> {
         ),
         body: ListView.builder(
           itemCount: value.allExpense.length,
-          itemBuilder: (context, Index) {
+          itemBuilder: (context, index) {
             //get the expenses
-            Expense individualedpenses = value.allExpense[Index];
+            Expense individualedpenses = value.allExpense[index];
             //return the value to the tile
             return customTiles(
               title: individualedpenses.name,
               trailing: changenumberwithicon(individualedpenses.amount),
+              pressedonEdit: (context) => editExpense(individualedpenses),
+              pressonDelete: (context) => deleteExpense(individualedpenses),
             );
           },
         ),
@@ -104,6 +155,46 @@ class _HomePageState extends State<HomePage> {
         }
       },
       child: const Text('Add'),
+    );
+  }
+
+  Widget editButton(Expense expense) {
+    return MaterialButton(
+      onPressed: () async {
+        if (namecontroller.text.isNotEmpty ||
+            amountcontroller.text.isNotEmpty) {
+          Navigator.pop(context);
+
+          Expense updateExpenses = Expense(
+            name: namecontroller.text.isEmpty
+                ? namecontroller.text
+                : expense.name,
+            amount: amountcontroller.text.isNotEmpty
+                ? convertDouble(amountcontroller.text)
+                : expense.amount,
+            date: DateTime.now(),
+          );
+          int currentId = expense.id;
+
+          await context
+              .read<ExpenseDb>()
+              .updateExpenses(currentId, updateExpenses);
+        }
+      },
+      child: const Text('Save'),
+    );
+  }
+
+  Widget deleteButton(int id) {
+    return MaterialButton(
+      onPressed: () async {
+        Navigator.pop(context);
+
+        await context.read<ExpenseDb>().deleteExpenses(id);
+        namecontroller.clear();
+        amountcontroller.clear();
+      },
+      child: const Text('Delete'),
     );
   }
 }

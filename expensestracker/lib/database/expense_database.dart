@@ -40,10 +40,12 @@ class ExpenseDb extends ChangeNotifier {
     updatedExpense.id = id;
     await isar.writeTxn(() => isar.expenses.put(updatedExpense));
     await readExpenses();
+    notifyListeners();
   }
 
   // delete
   Future<void> deleteExpenses(int id) async {
     await isar.writeTxn(() => isar.expenses.delete(id));
+    await readExpenses();
   }
 }
