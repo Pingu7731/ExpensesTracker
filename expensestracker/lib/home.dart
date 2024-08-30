@@ -166,7 +166,7 @@ class _HomePageState extends State<HomePage> {
           Navigator.pop(context);
 
           Expense updateExpenses = Expense(
-            name: namecontroller.text.isEmpty
+            name: namecontroller.text.isNotEmpty
                 ? namecontroller.text
                 : expense.name,
             amount: amountcontroller.text.isNotEmpty
@@ -174,6 +174,7 @@ class _HomePageState extends State<HomePage> {
                 : expense.amount,
             date: DateTime.now(),
           );
+
           int currentId = expense.id;
 
           await context
