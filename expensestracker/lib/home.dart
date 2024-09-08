@@ -109,6 +109,7 @@ class _HomePageState extends State<HomePage> {
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           child: const Icon(
             Icons.add,
+            color: Colors.white,
           ),
         ),
         body: ListView.builder(
