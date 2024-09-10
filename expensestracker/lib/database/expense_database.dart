@@ -5,7 +5,7 @@ import 'package:path_provider/path_provider.dart';
 
 class ExpenseDb extends ChangeNotifier {
   static late Isar isar;
-  List<Expense> _allexpense = [];
+  final List<Expense> _allexpense = [];
 
   //init db
 

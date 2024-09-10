@@ -3,7 +3,7 @@ import 'package:expensestracker/database/expense_database.dart';
 import 'package:expensestracker/helper/function.dart';
 import 'package:expensestracker/model/expense.dart';
 import 'package:flutter/material.dart';
-import 'package:isar/isar.dart';
+
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
@@ -112,19 +112,26 @@ class _HomePageState extends State<HomePage> {
             color: Colors.white,
           ),
         ),
-        body: ListView.builder(
-          itemCount: value.allExpense.length,
-          itemBuilder: (context, index) {
-            //get the expenses
-            Expense individualedpenses = value.allExpense[index];
-            //return the value to the tile
-            return customTiles(
-              title: individualedpenses.name,
-              trailing: changenumberwithicon(individualedpenses.amount),
-              pressedonEdit: (context) => editExpense(individualedpenses),
-              pressonDelete: (context) => deleteExpense(individualedpenses),
-            );
-          },
+        body: Column(
+          children: [
+            Expanded(
+              child: ListView.builder(
+                itemCount: value.allExpense.length,
+                itemBuilder: (context, index) {
+                  //get the expenses
+                  Expense individualedpenses = value.allExpense[index];
+                  //return the value to the tile
+                  return customTiles(
+                    title: individualedpenses.name,
+                    trailing: changenumberwithicon(individualedpenses.amount),
+                    pressedonEdit: (context) => editExpense(individualedpenses),
+                    pressonDelete: (context) =>
+                        deleteExpense(individualedpenses),
+                  );
+                },
+              ),
+            ),
+          ],
         ),
       ),
     );
