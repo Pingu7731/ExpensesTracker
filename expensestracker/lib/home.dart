@@ -1,3 +1,4 @@
+import 'package:expensestracker/BarGraph/BarGraph.dart';
 import 'package:expensestracker/component/epense_tile.dart';
 import 'package:expensestracker/database/expense_database.dart';
 import 'package:expensestracker/helper/function.dart';
@@ -17,8 +18,18 @@ class _HomePageState extends State<HomePage> {
   TextEditingController namecontroller = TextEditingController();
   TextEditingController amountcontroller = TextEditingController();
 
-  void init() {
+  Future<Map<int, double>>? monthTotalFuture;
+
+  @override
+  void initState() {
     Provider.of<ExpenseDb>(context, listen: false).readExpenses();
+    refreshGraphdata();
+    super.initState();
+  }
+
+  void refreshGraphdata() {
+    monthTotalFuture =
+        Provider.of<ExpenseDb>(context, listen: false).calculatemonthtotal();
   }
 
   void openNewExpenseBox() {
@@ -101,8 +112,16 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ExpenseDb>(
-      builder: (context, value, child) => Scaffold(
+    return Consumer<ExpenseDb>(builder: (context, value, child) {
+      int startmonth = value.getstartmonth();
+      int startyear = value.getstartyear();
+      int currentmonth = DateTime.now().month;
+      int currentyear = DateTime.now().year;
+      //get moth count
+      int monthcount =
+          caulcMonthCount(startyear, startmonth, currentyear, currentmonth);
+
+      return Scaffold(
         floatingActionButton: FloatingActionButton(
           onPressed: openNewExpenseBox,
           backgroundColor: const Color.fromARGB(255, 0, 0, 0),
@@ -114,6 +133,30 @@ class _HomePageState extends State<HomePage> {
         ),
         body: Column(
           children: [
+            // the graph ui
+            SizedBox(
+              height: 300,
+              child: FutureBuilder(
+                future: monthTotalFuture,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    final monthlytotal = snapshot.data ?? {};
+
+                    //generate list
+
+                    List<double> monthlysummary = List.generate(monthcount,
+                        (index) => monthlytotal[startmonth + index] ?? 0.0);
+                    return Bargraph(
+                        monthSum: monthlysummary, startmonth: startmonth);
+                  } else {
+                    return const Center(
+                      child: Text("waittt im getting your data"),
+                    );
+                  }
+                },
+              ),
+            ),
+
             Expanded(
               child: ListView.builder(
                 itemCount: value.allExpense.length,
@@ -133,8 +176,8 @@ class _HomePageState extends State<HomePage> {
             ),
           ],
         ),
-      ),
-    );
+      );
+    });
   }
 
   Widget cancelBUtton() {
