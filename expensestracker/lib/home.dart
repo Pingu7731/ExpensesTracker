@@ -131,50 +131,53 @@ class _HomePageState extends State<HomePage> {
             color: Colors.white,
           ),
         ),
-        body: Column(
-          children: [
-            // the graph ui
-            SizedBox(
-              height: 300,
-              child: FutureBuilder(
-                future: monthTotalFuture,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.done) {
-                    final monthlytotal = snapshot.data ?? {};
+        body: SafeArea(
+          child: Column(
+            children: [
+              // the graph ui
+              SizedBox(
+                height: 300,
+                child: FutureBuilder(
+                  future: monthTotalFuture,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      final monthlytotal = snapshot.data ?? {};
 
-                    //generate list
+                      //generate list
 
-                    List<double> monthlysummary = List.generate(monthcount,
-                        (index) => monthlytotal[startmonth + index] ?? 0.0);
-                    return Bargraph(
-                        monthSum: monthlysummary, startmonth: startmonth);
-                  } else {
-                    return const Center(
-                      child: Text("waittt im getting your data"),
+                      List<double> monthlysummary = List.generate(monthcount,
+                          (index) => monthlytotal[startmonth + index] ?? 0.0);
+                      return Bargraph(
+                          monthSum: monthlysummary, startmonth: startmonth);
+                    } else {
+                      return const Center(
+                        child: Text("waittt im getting your data"),
+                      );
+                    }
+                  },
+                ),
+              ),
+
+              Expanded(
+                child: ListView.builder(
+                  itemCount: value.allExpense.length,
+                  itemBuilder: (context, index) {
+                    //get the expenses
+                    Expense individualedpenses = value.allExpense[index];
+                    //return the value to the tile
+                    return customTiles(
+                      title: individualedpenses.name,
+                      trailing: changenumberwithicon(individualedpenses.amount),
+                      pressedonEdit: (context) =>
+                          editExpense(individualedpenses),
+                      pressonDelete: (context) =>
+                          deleteExpense(individualedpenses),
                     );
-                  }
-                },
+                  },
+                ),
               ),
-            ),
-
-            Expanded(
-              child: ListView.builder(
-                itemCount: value.allExpense.length,
-                itemBuilder: (context, index) {
-                  //get the expenses
-                  Expense individualedpenses = value.allExpense[index];
-                  //return the value to the tile
-                  return customTiles(
-                    title: individualedpenses.name,
-                    trailing: changenumberwithicon(individualedpenses.amount),
-                    pressedonEdit: (context) => editExpense(individualedpenses),
-                    pressonDelete: (context) =>
-                        deleteExpense(individualedpenses),
-                  );
-                },
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       );
     });

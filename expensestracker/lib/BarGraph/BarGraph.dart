@@ -30,11 +30,93 @@ class _BargraphState extends State<Bargraph> {
 
   @override
   Widget build(BuildContext context) {
+    initbar();
     return BarChart(
       BarChartData(
-        minY: 2,
+        minY: 0,
         maxY: 100,
+        gridData: const FlGridData(show: false),
+        borderData: FlBorderData(show: false),
+        titlesData: const FlTitlesData(
+          show: true,
+          topTitles: AxisTitles(
+            sideTitles: SideTitles(showTitles: false),
+          ),
+          leftTitles: AxisTitles(
+            sideTitles: SideTitles(showTitles: false),
+          ),
+          rightTitles: AxisTitles(
+            sideTitles: SideTitles(showTitles: false),
+          ),
+          bottomTitles: AxisTitles(
+            sideTitles: SideTitles(
+                showTitles: true, getTitlesWidget: getbargraphtitlename),
+          ),
+        ),
+        barGroups: barData
+            .map((data) => BarChartGroupData(
+                  x: data.x,
+                  barRods: [BarChartRodData(toY: data.y)],
+                ))
+            .toList(),
       ),
     );
   }
+}
+
+Widget getbargraphtitlename(double value, TitleMeta meta) {
+  String text = '';
+
+  const textstyle = TextStyle(
+    color: Colors.black,
+    fontWeight: FontWeight.bold,
+    fontSize: 20,
+  );
+  switch (value.toInt()) {
+    case 0:
+      text = 'J';
+      break;
+    case 1:
+      text = 'F';
+      break;
+    case 2:
+      text = 'M';
+      break;
+    case 3:
+      text = 'A';
+      break;
+    case 4:
+      text = 'M';
+      break;
+    case 5:
+      text = 'J';
+      break;
+    case 6:
+      text = 'J';
+      break;
+    case 7:
+      text = 'Au';
+      break;
+    case 8:
+      text = 'S';
+      break;
+    case 9:
+      text = 'O';
+      break;
+    case 10:
+      text = 'N';
+      break;
+    case 11:
+      text = 'D';
+      break;
+
+    default:
+      '';
+  }
+  return SideTitleWidget(
+      axisSide: meta.axisSide,
+      child: Text(
+        text,
+        style: textstyle,
+      ));
 }
