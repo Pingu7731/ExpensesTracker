@@ -204,6 +204,7 @@ class _HomePageState extends State<HomePage> {
             date: DateTime.now(),
           );
           await context.read<ExpenseDb>().createExpenses(newExpense);
+          refreshGraphdata();
           namecontroller.clear();
           amountcontroller.clear();
         }
@@ -234,6 +235,8 @@ class _HomePageState extends State<HomePage> {
           await context
               .read<ExpenseDb>()
               .updateExpenses(currentId, updateExpenses);
+
+          refreshGraphdata();
         }
       },
       child: const Text('Save'),
@@ -248,6 +251,7 @@ class _HomePageState extends State<HomePage> {
         await context.read<ExpenseDb>().deleteExpenses(id);
         namecontroller.clear();
         amountcontroller.clear();
+        refreshGraphdata();
       },
       child: const Text('Delete'),
     );

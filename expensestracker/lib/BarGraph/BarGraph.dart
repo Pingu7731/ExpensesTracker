@@ -21,7 +21,7 @@ class _BargraphState extends State<Bargraph> {
   List<TheBar> barData = [];
 
   // init bar data
-  void initbar() {
+  void initializeBar() {
     barData = List.generate(
       widget.monthSum.length,
       (index) => TheBar(x: index, y: widget.monthSum[index]),
@@ -30,35 +30,56 @@ class _BargraphState extends State<Bargraph> {
 
   @override
   Widget build(BuildContext context) {
-    initbar();
-    return BarChart(
-      BarChartData(
-        minY: 0,
-        maxY: 100,
-        gridData: const FlGridData(show: false),
-        borderData: FlBorderData(show: false),
-        titlesData: const FlTitlesData(
-          show: true,
-          topTitles: AxisTitles(
-            sideTitles: SideTitles(showTitles: false),
-          ),
-          leftTitles: AxisTitles(
-            sideTitles: SideTitles(showTitles: false),
-          ),
-          rightTitles: AxisTitles(
-            sideTitles: SideTitles(showTitles: false),
-          ),
-          bottomTitles: AxisTitles(
-            sideTitles: SideTitles(
-                showTitles: true, getTitlesWidget: getbargraphtitlename),
+    initializeBar();
+    double barwidth = 20;
+    double barspacing = 15;
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: SizedBox(
+        width: barwidth * barData.length + barspacing * (barData.length - 1),
+        child: BarChart(
+          BarChartData(
+            minY: 0,
+            maxY: 100,
+            gridData: const FlGridData(show: false),
+            borderData: FlBorderData(show: false),
+            titlesData: const FlTitlesData(
+              show: true,
+              topTitles: AxisTitles(
+                sideTitles: SideTitles(showTitles: false),
+              ),
+              leftTitles: AxisTitles(
+                sideTitles: SideTitles(showTitles: false),
+              ),
+              rightTitles: AxisTitles(
+                sideTitles: SideTitles(showTitles: false),
+              ),
+              bottomTitles: AxisTitles(
+                sideTitles: SideTitles(
+                    showTitles: true,
+                    getTitlesWidget: getbargraphtitlename,
+                    reservedSize: 48),
+              ),
+            ),
+            barGroups: barData
+                .map((data) => BarChartGroupData(
+                      x: data.x,
+                      barRods: [
+                        BarChartRodData(
+                            toY: data.y,
+                            width: 20,
+                            borderRadius: BorderRadius.circular(5),
+                            color: Colors.black,
+                            backDrawRodData: BackgroundBarChartRodData(
+                              show: true,
+                              toY: 100,
+                              color: const Color.fromARGB(255, 235, 223, 242),
+                            )),
+                      ],
+                    ))
+                .toList(),
           ),
         ),
-        barGroups: barData
-            .map((data) => BarChartGroupData(
-                  x: data.x,
-                  barRods: [BarChartRodData(toY: data.y)],
-                ))
-            .toList(),
       ),
     );
   }
@@ -72,7 +93,8 @@ Widget getbargraphtitlename(double value, TitleMeta meta) {
     fontWeight: FontWeight.bold,
     fontSize: 20,
   );
-  switch (value.toInt()) {
+  //%12 is to loop back to the first month
+  switch (value.toInt() % 12) {
     case 0:
       text = 'J';
       break;
@@ -95,7 +117,7 @@ Widget getbargraphtitlename(double value, TitleMeta meta) {
       text = 'J';
       break;
     case 7:
-      text = 'Au';
+      text = 'A';
       break;
     case 8:
       text = 'S';
@@ -111,7 +133,7 @@ Widget getbargraphtitlename(double value, TitleMeta meta) {
       break;
 
     default:
-      '';
+      'Boom';
   }
   return SideTitleWidget(
       axisSide: meta.axisSide,
