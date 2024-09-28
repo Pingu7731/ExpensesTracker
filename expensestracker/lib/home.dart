@@ -121,6 +121,12 @@ class _HomePageState extends State<HomePage> {
       int monthcount =
           caulcMonthCount(startyear, startmonth, currentyear, currentmonth);
 
+      //only show currentmonth expenses
+      List<Expense> currentmonthexpense = value.allExpense.where((expense) {
+        return expense.date.year == currentyear &&
+            expense.date.month == currentmonth;
+      }).toList();
+
       return Scaffold(
         floatingActionButton: FloatingActionButton(
           onPressed: openNewExpenseBox,
@@ -162,8 +168,11 @@ class _HomePageState extends State<HomePage> {
                 child: ListView.builder(
                   itemCount: value.allExpense.length,
                   itemBuilder: (context, index) {
-                    //get the expenses
-                    Expense individualedpenses = value.allExpense[index];
+                    //reverse expenses list
+                    int reverseindex = currentmonthexpense.length - 1 - index;
+                    //get the expenses from month
+                    Expense individualedpenses =
+                        currentmonthexpense[reverseindex];
                     //return the value to the tile
                     return customTiles(
                       title: individualedpenses.name,

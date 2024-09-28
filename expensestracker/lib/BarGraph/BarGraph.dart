@@ -28,6 +28,18 @@ class _BargraphState extends State<Bargraph> {
     );
   }
 
+  //CALC the max of graph and not letting it exceed
+  double calculateMaxheight() {
+    double max = 300;
+
+    widget.monthSum.sort();
+    max = widget.monthSum.last * 1.01;
+    if (max < 500) {
+      return 500;
+    }
+    return max;
+  }
+
   @override
   Widget build(BuildContext context) {
     initializeBar();
@@ -35,49 +47,54 @@ class _BargraphState extends State<Bargraph> {
     double barspacing = 15;
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
-      child: SizedBox(
-        width: barwidth * barData.length + barspacing * (barData.length - 1),
-        child: BarChart(
-          BarChartData(
-            minY: 0,
-            maxY: 100,
-            gridData: const FlGridData(show: false),
-            borderData: FlBorderData(show: false),
-            titlesData: const FlTitlesData(
-              show: true,
-              topTitles: AxisTitles(
-                sideTitles: SideTitles(showTitles: false),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 25.0),
+        child: SizedBox(
+          width: barwidth * barData.length + barspacing * (barData.length - 1),
+          child: BarChart(
+            BarChartData(
+              minY: 0,
+              maxY: calculateMaxheight(),
+              gridData: const FlGridData(show: false),
+              borderData: FlBorderData(show: false),
+              titlesData: const FlTitlesData(
+                show: true,
+                topTitles: AxisTitles(
+                  sideTitles: SideTitles(showTitles: false),
+                ),
+                leftTitles: AxisTitles(
+                  sideTitles: SideTitles(showTitles: false),
+                ),
+                rightTitles: AxisTitles(
+                  sideTitles: SideTitles(showTitles: false),
+                ),
+                bottomTitles: AxisTitles(
+                  sideTitles: SideTitles(
+                      showTitles: true,
+                      getTitlesWidget: getbargraphtitlename,
+                      reservedSize: 48),
+                ),
               ),
-              leftTitles: AxisTitles(
-                sideTitles: SideTitles(showTitles: false),
-              ),
-              rightTitles: AxisTitles(
-                sideTitles: SideTitles(showTitles: false),
-              ),
-              bottomTitles: AxisTitles(
-                sideTitles: SideTitles(
-                    showTitles: true,
-                    getTitlesWidget: getbargraphtitlename,
-                    reservedSize: 48),
-              ),
+              barGroups: barData
+                  .map((data) => BarChartGroupData(
+                        x: data.x,
+                        barRods: [
+                          BarChartRodData(
+                              toY: calculateMaxheight(),
+                              width: barwidth,
+                              borderRadius: BorderRadius.circular(5),
+                              color: Colors.black,
+                              backDrawRodData: BackgroundBarChartRodData(
+                                show: true,
+                                toY: calculateMaxheight(),
+                                color: const Color.fromARGB(255, 235, 223, 242),
+                              )),
+                        ],
+                      ))
+                  .toList(),
+              alignment: BarChartAlignment.center,
+              groupsSpace: barspacing,
             ),
-            barGroups: barData
-                .map((data) => BarChartGroupData(
-                      x: data.x,
-                      barRods: [
-                        BarChartRodData(
-                            toY: data.y,
-                            width: 20,
-                            borderRadius: BorderRadius.circular(5),
-                            color: Colors.black,
-                            backDrawRodData: BackgroundBarChartRodData(
-                              show: true,
-                              toY: 100,
-                              color: const Color.fromARGB(255, 235, 223, 242),
-                            )),
-                      ],
-                    ))
-                .toList(),
           ),
         ),
       ),
