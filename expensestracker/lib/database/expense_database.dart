@@ -85,4 +85,23 @@ class ExpenseDb extends ChangeNotifier {
     );
     return allExpense.first.date.year;
   }
+
+  Future<double> calculateCurrMontTotal() async {
+    await readExpenses();
+
+    //get date
+    int currentMonth = DateTime.now().month;
+    int currentYear = DateTime.now().year;
+
+    List<Expense> currentmonthexpense = _allexpense.where((expense) {
+      //check is the expense date month same as currentmonth
+      //if expense motnh/year == current month/year , return expense.month/year
+      return expense.date.month == currentMonth &&
+          expense.date.year == currentYear;
+    }).toList();
+
+    double totla =
+        currentmonthexpense.fold(0, (sum, expense) => sum + expense.amount);
+    return totla;
+  }
 }

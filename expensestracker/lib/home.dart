@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:expensestracker/BarGraph/BarGraph.dart';
 import 'package:expensestracker/component/epense_tile.dart';
 import 'package:expensestracker/database/expense_database.dart';
@@ -19,17 +21,20 @@ class _HomePageState extends State<HomePage> {
   TextEditingController amountcontroller = TextEditingController();
 
   Future<Map<int, double>>? monthTotalFuture;
+  Future<double>? calculateCurrMontTotal;
 
   @override
   void initState() {
     Provider.of<ExpenseDb>(context, listen: false).readExpenses();
-    refreshGraphdata();
+    refreshData();
     super.initState();
   }
 
-  void refreshGraphdata() {
+  void refreshData() {
     monthTotalFuture =
         Provider.of<ExpenseDb>(context, listen: false).calculatemonthtotal();
+    calculateCurrMontTotal =
+        Provider.of<ExpenseDb>(context, listen: false).calculateCurrMontTotal();
   }
 
   void openNewExpenseBox() {
@@ -137,6 +142,26 @@ class _HomePageState extends State<HomePage> {
             color: Colors.white,
           ),
         ),
+        appBar: AppBar(
+          centerTitle: true,
+          backgroundColor: Colors.transparent,
+          title: FutureBuilder<double>(
+              //get the amount of total stuff
+              future: calculateCurrMontTotal,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('\$' + snapshot.data!.toStringAsFixed(2)),
+                      Text(getcurrentMonthname()),
+                    ],
+                  );
+                } else {
+                  return const Text('Brb Getting Data ( •̀ ω •́ )y');
+                }
+              }),
+        ),
         body: SafeArea(
           child: Column(
             children: [
@@ -213,7 +238,7 @@ class _HomePageState extends State<HomePage> {
             date: DateTime.now(),
           );
           await context.read<ExpenseDb>().createExpenses(newExpense);
-          refreshGraphdata();
+          refreshData();
           namecontroller.clear();
           amountcontroller.clear();
         }
@@ -245,7 +270,7 @@ class _HomePageState extends State<HomePage> {
               .read<ExpenseDb>()
               .updateExpenses(currentId, updateExpenses);
 
-          refreshGraphdata();
+          refreshData();
         }
       },
       child: const Text('Save'),
@@ -260,7 +285,7 @@ class _HomePageState extends State<HomePage> {
         await context.read<ExpenseDb>().deleteExpenses(id);
         namecontroller.clear();
         amountcontroller.clear();
-        refreshGraphdata();
+        refreshData();
       },
       child: const Text('Delete'),
     );

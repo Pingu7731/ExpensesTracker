@@ -16,3 +16,22 @@ int caulcMonthCount(int startyear, startmonth, currentyear, currentmonth) {
       (currentyear - startyear) * 12 + currentmonth - startmonth + 1;
   return monthcount;
 }
+
+String getcurrentMonthname() {
+  DateTime now = DateTime.now();
+  List<String> month = [
+    "JAN",
+    "FEB",
+    "MAR",
+    "APR",
+    "MAY",
+    "JUN",
+    "JUL",
+    "AUG",
+    "SEP",
+    "OCT",
+    "NOV",
+    "DEC",
+  ];
+  return month[now.month - 1];
+}
