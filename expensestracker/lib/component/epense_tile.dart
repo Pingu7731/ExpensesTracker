@@ -17,23 +17,35 @@ class customTiles extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Slidable(
-      endActionPane: ActionPane(
-        motion: const StretchMotion(),
-        children: [
-          SlidableAction(
-            onPressed: pressedonEdit,
-            icon: Icons.edit,
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 18),
+      child: Slidable(
+        endActionPane: ActionPane(
+          motion: const StretchMotion(),
+          children: [
+            SlidableAction(
+              onPressed: pressedonEdit,
+              icon: Icons.edit,
+              backgroundColor: Colors.grey,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            SlidableAction(
+              onPressed: pressonDelete,
+              icon: Icons.delete,
+              backgroundColor: Colors.red,
+              borderRadius: BorderRadius.circular(8),
+            ),
+          ],
+        ),
+        child: Container(
+          decoration: BoxDecoration(
+              color: const Color.fromARGB(255, 176, 158, 170),
+              borderRadius: BorderRadius.circular(10)),
+          child: ListTile(
+            title: Text(title),
+            trailing: Text(trailing),
           ),
-          SlidableAction(
-            onPressed: pressonDelete,
-            icon: Icons.delete,
-          ),
-        ],
-      ),
-      child: ListTile(
-        title: Text(title),
-        trailing: Text(trailing),
+        ),
       ),
     );
   }

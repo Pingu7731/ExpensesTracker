@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:expensestracker/BarGraph/BarGraph.dart';
 import 'package:expensestracker/component/epense_tile.dart';
 import 'package:expensestracker/database/expense_database.dart';
@@ -20,7 +18,7 @@ class _HomePageState extends State<HomePage> {
   TextEditingController namecontroller = TextEditingController();
   TextEditingController amountcontroller = TextEditingController();
 
-  Future<Map<int, double>>? monthTotalFuture;
+  Future<Map<String, double>>? monthTotalFuture;
   Future<double>? calculateCurrMontTotal;
 
   @override
@@ -153,7 +151,7 @@ class _HomePageState extends State<HomePage> {
                   return Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('\$' + snapshot.data!.toStringAsFixed(2)),
+                      Text('\$${snapshot.data!.toStringAsFixed(2)}'),
                       Text(getcurrentMonthname()),
                     ],
                   );
@@ -172,12 +170,20 @@ class _HomePageState extends State<HomePage> {
                   future: monthTotalFuture,
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.done) {
-                      final monthlytotal = snapshot.data ?? {};
+                      Map<String, double> monthlytotal = snapshot.data ?? {};
 
                       //generate list
+                      List<double> monthlysummary = List.generate(
+                        monthcount,
+                        (index) {
+                          int year = startyear + (startmonth + index - 1) ~/ 12;
+                          int month = (startmonth + index - 1) % 12 + 1;
 
-                      List<double> monthlysummary = List.generate(monthcount,
-                          (index) => monthlytotal[startmonth + index] ?? 0.0);
+                          String yearMonthK = '$year-$month';
+
+                          return monthlytotal[yearMonthK] ?? 0.0;
+                        },
+                      );
                       return Bargraph(
                           monthSum: monthlysummary, startmonth: startmonth);
                     } else {
@@ -188,7 +194,9 @@ class _HomePageState extends State<HomePage> {
                   },
                 ),
               ),
-
+              const SizedBox(
+                height: 25,
+              ),
               Expanded(
                 child: ListView.builder(
                   itemCount: value.allExpense.length,

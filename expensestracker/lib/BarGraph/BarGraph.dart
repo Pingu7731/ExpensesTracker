@@ -20,6 +20,14 @@ class _BargraphState extends State<Bargraph> {
   //list to hold bardata
   List<TheBar> barData = [];
 
+  @override
+  void initState() {
+    super.initState();
+
+    //auto scroll to latest month
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) => scrollToend());
+  }
+
   // init bar data
   void initializeBar() {
     barData = List.generate(
@@ -40,12 +48,23 @@ class _BargraphState extends State<Bargraph> {
     return max;
   }
 
+  //make sure it scroll to the latest month
+  final ScrollController _scrollcontroller = ScrollController();
+  void scrollToend() {
+    (
+      _scrollcontroller.position.maxScrollExtent,
+      duration: const Duration(seconds: 1),
+      curve: Curves.fastOutSlowIn,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     initializeBar();
     double barwidth = 20;
     double barspacing = 15;
     return SingleChildScrollView(
+      controller: _scrollcontroller,
       scrollDirection: Axis.horizontal,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 25.0),
