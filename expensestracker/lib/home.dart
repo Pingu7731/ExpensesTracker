@@ -131,13 +131,14 @@ class _HomePageState extends State<HomePage> {
       }).toList();
 
       return Scaffold(
+        backgroundColor: const Color.fromARGB(255, 0, 0, 0),
         floatingActionButton: FloatingActionButton(
           onPressed: openNewExpenseBox,
-          backgroundColor: const Color.fromARGB(255, 0, 0, 0),
+          backgroundColor: const Color.fromARGB(255, 255, 255, 255),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           child: const Icon(
             Icons.add,
-            color: Colors.white,
+            color: Color.fromARGB(255, 0, 0, 0),
           ),
         ),
         appBar: AppBar(
@@ -151,12 +152,23 @@ class _HomePageState extends State<HomePage> {
                   return Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('\$${snapshot.data!.toStringAsFixed(2)}'),
-                      Text(getcurrentMonthname()),
+                      Text(
+                        '\$${snapshot.data!.toStringAsFixed(2)}',
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                      Text(
+                        getcurrentMonthname(),
+                        style: const TextStyle(color: Colors.white),
+                      ),
                     ],
                   );
                 } else {
-                  return const Text('Brb Getting Data ( •̀ ω •́ )y');
+                  return const Center(
+                    child: Text(
+                      'Brb Getting Data ( •̀ ω •́ )y',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  );
                 }
               }),
         ),
@@ -188,7 +200,11 @@ class _HomePageState extends State<HomePage> {
                           monthSum: monthlysummary, startmonth: startmonth);
                     } else {
                       return const Center(
-                        child: Text("waittt im getting your data"),
+                        child: Text(
+                          "waittt im getting your data",
+                          style: TextStyle(
+                              color: Color.fromARGB(255, 255, 255, 255)),
+                        ),
                       );
                     }
                   },

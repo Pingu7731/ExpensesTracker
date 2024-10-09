@@ -26,20 +26,20 @@ class customTiles extends StatelessWidget {
             SlidableAction(
               onPressed: pressedonEdit,
               icon: Icons.edit,
-              backgroundColor: Colors.grey,
+              backgroundColor: const Color.fromARGB(255, 208, 208, 208),
               borderRadius: BorderRadius.circular(8),
             ),
             SlidableAction(
               onPressed: pressonDelete,
               icon: Icons.delete,
-              backgroundColor: Colors.red,
+              backgroundColor: const Color.fromARGB(255, 252, 112, 102),
               borderRadius: BorderRadius.circular(8),
             ),
           ],
         ),
         child: Container(
           decoration: BoxDecoration(
-              color: const Color.fromARGB(255, 176, 158, 170),
+              color: const Color.fromARGB(255, 240, 240, 240),
               borderRadius: BorderRadius.circular(10)),
           child: ListTile(
             title: Text(title),

@@ -99,14 +99,15 @@ class _BargraphState extends State<Bargraph> {
                         x: data.x,
                         barRods: [
                           BarChartRodData(
-                              toY: calculateMaxheight(),
+                              // toY: calculateMaxheight(),
+                              toY: 200,
                               width: barwidth,
                               borderRadius: BorderRadius.circular(5),
-                              color: Colors.black,
+                              color: Colors.white,
                               backDrawRodData: BackgroundBarChartRodData(
                                 show: true,
                                 toY: calculateMaxheight(),
-                                color: const Color.fromARGB(255, 235, 223, 242),
+                                color: const Color.fromARGB(255, 129, 129, 130),
                               )),
                         ],
                       ))
@@ -125,7 +126,7 @@ Widget getbargraphtitlename(double value, TitleMeta meta) {
   String text = '';
 
   const textstyle = TextStyle(
-    color: Colors.black,
+    color: Color.fromARGB(255, 255, 255, 255),
     fontWeight: FontWeight.bold,
     fontSize: 20,
   );
