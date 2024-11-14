@@ -1,3 +1,4 @@
 {
-  "cmake.sourceDirectory": "D:/Github/Ping/ExpensesTracker/expensestracker/linux"
+  "cmake.sourceDirectory": "D:/Github/Ping/ExpensesTracker/expensestracker/linux",
+  "cmake.ignoreCMakeListsMissing": true
 }

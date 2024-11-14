@@ -52,6 +52,8 @@ class _HomePageState extends State<HomePage> {
             ),
             TextField(
               controller: amountcontroller,
+              keyboardType:
+                  const TextInputType.numberWithOptions(decimal: true),
               decoration: const InputDecoration(hintText: "\$ ?"),
             ),
           ],
@@ -125,7 +127,8 @@ class _HomePageState extends State<HomePage> {
           caulcMonthCount(startyear, startmonth, currentyear, currentmonth);
 
       //only show currentmonth expenses
-      List<Expense> currentmonthexpense = value.allExpense.where((expense) {
+      List<Expense> currentMonthExpense =
+          value.allExpense.reversed.where((expense) {
         return expense.date.year == currentyear &&
             expense.date.month == currentmonth;
       }).toList();
@@ -215,13 +218,10 @@ class _HomePageState extends State<HomePage> {
               ),
               Expanded(
                 child: ListView.builder(
-                  itemCount: value.allExpense.length,
+                  itemCount: currentMonthExpense.length,
                   itemBuilder: (context, index) {
-                    //reverse expenses list
-                    int reverseindex = currentmonthexpense.length - 1 - index;
-                    //get the expenses from month
-                    Expense individualedpenses =
-                        currentmonthexpense[reverseindex];
+                    Expense individualedpenses = currentMonthExpense[index];
+
                     //return the value to the tile
                     return customTiles(
                       title: individualedpenses.name,
