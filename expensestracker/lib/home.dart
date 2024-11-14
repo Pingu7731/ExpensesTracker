@@ -223,7 +223,7 @@ class _HomePageState extends State<HomePage> {
                     Expense individualedpenses = currentMonthExpense[index];
 
                     //return the value to the tile
-                    return customTiles(
+                    return CustomTile(
                       title: individualedpenses.name,
                       trailing: changenumberwithicon(individualedpenses.amount),
                       pressedonEdit: (context) =>

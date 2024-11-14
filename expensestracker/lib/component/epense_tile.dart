@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
-class customTiles extends StatelessWidget {
+class CustomTile extends StatelessWidget {
   final String title;
   final String trailing;
   final void Function(BuildContext)? pressedonEdit;
   final void Function(BuildContext)? pressonDelete;
 
-  const customTiles({
+  const CustomTile({
     super.key,
     required this.title,
     required this.trailing,

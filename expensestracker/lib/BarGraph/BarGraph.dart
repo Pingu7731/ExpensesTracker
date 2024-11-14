@@ -41,7 +41,7 @@ class _BargraphState extends State<Bargraph> {
     double max = 300;
 
     widget.monthSum.sort();
-    max = widget.monthSum.last * 1.05;
+    max = widget.monthSum.last * 1.06;
     if (max < 500) {
       return 500;
     }
@@ -100,9 +100,9 @@ class _BargraphState extends State<Bargraph> {
                         barRods: [
                           BarChartRodData(
                               // toY: calculateMaxheight(),
-                              toY: calculateMaxheight(),
+                              toY: data.y,
                               width: barwidth,
-                              borderRadius: BorderRadius.circular(5),
+                              borderRadius: BorderRadius.circular(3),
                               color: Colors.white,
                               backDrawRodData: BackgroundBarChartRodData(
                                 show: true,
